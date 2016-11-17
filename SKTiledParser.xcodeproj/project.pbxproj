@@ -1,0 +1,305 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1223DBCC1DDE6D0A00833A90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1223DBCB1DDE6D0A00833A90 /* AppDelegate.swift */; };
+		1223DBD21DDE6D0A00833A90 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1223DBD11DDE6D0A00833A90 /* GameScene.swift */; };
+		1223DBD41DDE6D0A00833A90 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1223DBD31DDE6D0A00833A90 /* ViewController.swift */; };
+		1223DBD61DDE6D0A00833A90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1223DBD51DDE6D0A00833A90 /* Assets.xcassets */; };
+		1223DBD91DDE6D0A00833A90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1223DBD71DDE6D0A00833A90 /* Main.storyboard */; };
+		1223DBE61DDE6EB000833A90 /* SKTiledParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1223DBE51DDE6EB000833A90 /* SKTiledParser.swift */; };
+		1223DBE81DDE721A00833A90 /* tilemap.tmx in Resources */ = {isa = PBXBuildFile; fileRef = 1223DBE71DDE721A00833A90 /* tilemap.tmx */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1223DBC81DDE6D0A00833A90 /* SKTiledParser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKTiledParser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1223DBCB1DDE6D0A00833A90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1223DBD11DDE6D0A00833A90 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		1223DBD31DDE6D0A00833A90 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1223DBD51DDE6D0A00833A90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1223DBD81DDE6D0A00833A90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1223DBDA1DDE6D0A00833A90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1223DBE51DDE6EB000833A90 /* SKTiledParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SKTiledParser.swift; path = SKTiledParser/SKTiledParser.swift; sourceTree = SOURCE_ROOT; };
+		1223DBE71DDE721A00833A90 /* tilemap.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tilemap.tmx; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1223DBC51DDE6D0A00833A90 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1223DBBF1DDE6D0A00833A90 = {
+			isa = PBXGroup;
+			children = (
+				1223DBCA1DDE6D0A00833A90 /* SKTiledParser */,
+				1223DBC91DDE6D0A00833A90 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1223DBC91DDE6D0A00833A90 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1223DBC81DDE6D0A00833A90 /* SKTiledParser.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1223DBCA1DDE6D0A00833A90 /* SKTiledParser */ = {
+			isa = PBXGroup;
+			children = (
+				1223DBE51DDE6EB000833A90 /* SKTiledParser.swift */,
+				1223DBCB1DDE6D0A00833A90 /* AppDelegate.swift */,
+				1223DBD11DDE6D0A00833A90 /* GameScene.swift */,
+				1223DBD31DDE6D0A00833A90 /* ViewController.swift */,
+				1223DBD51DDE6D0A00833A90 /* Assets.xcassets */,
+				1223DBE71DDE721A00833A90 /* tilemap.tmx */,
+				1223DBD71DDE6D0A00833A90 /* Main.storyboard */,
+				1223DBDA1DDE6D0A00833A90 /* Info.plist */,
+			);
+			path = SKTiledParser;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1223DBC71DDE6D0A00833A90 /* SKTiledParser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1223DBDD1DDE6D0A00833A90 /* Build configuration list for PBXNativeTarget "SKTiledParser" */;
+			buildPhases = (
+				1223DBC41DDE6D0A00833A90 /* Sources */,
+				1223DBC51DDE6D0A00833A90 /* Frameworks */,
+				1223DBC61DDE6D0A00833A90 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SKTiledParser;
+			productName = SKTiledParser;
+			productReference = 1223DBC81DDE6D0A00833A90 /* SKTiledParser.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1223DBC01DDE6D0A00833A90 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0810;
+				LastUpgradeCheck = 0810;
+				TargetAttributes = {
+					1223DBC71DDE6D0A00833A90 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 1223DBC31DDE6D0A00833A90 /* Build configuration list for PBXProject "SKTiledParser" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1223DBBF1DDE6D0A00833A90;
+			productRefGroup = 1223DBC91DDE6D0A00833A90 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1223DBC71DDE6D0A00833A90 /* SKTiledParser */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1223DBC61DDE6D0A00833A90 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1223DBE81DDE721A00833A90 /* tilemap.tmx in Resources */,
+				1223DBD61DDE6D0A00833A90 /* Assets.xcassets in Resources */,
+				1223DBD91DDE6D0A00833A90 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1223DBC41DDE6D0A00833A90 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1223DBD41DDE6D0A00833A90 /* ViewController.swift in Sources */,
+				1223DBD21DDE6D0A00833A90 /* GameScene.swift in Sources */,
+				1223DBCC1DDE6D0A00833A90 /* AppDelegate.swift in Sources */,
+				1223DBE61DDE6EB000833A90 /* SKTiledParser.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1223DBD71DDE6D0A00833A90 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1223DBD81DDE6D0A00833A90 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1223DBDB1DDE6D0A00833A90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1223DBDC1DDE6D0A00833A90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		1223DBDE1DDE6D0A00833A90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SKTiledParser/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "kyouko-taiga.SKTiledParser";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		1223DBDF1DDE6D0A00833A90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SKTiledParser/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "kyouko-taiga.SKTiledParser";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1223DBC31DDE6D0A00833A90 /* Build configuration list for PBXProject "SKTiledParser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1223DBDB1DDE6D0A00833A90 /* Debug */,
+				1223DBDC1DDE6D0A00833A90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1223DBDD1DDE6D0A00833A90 /* Build configuration list for PBXNativeTarget "SKTiledParser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1223DBDE1DDE6D0A00833A90 /* Debug */,
+				1223DBDF1DDE6D0A00833A90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1223DBC01DDE6D0A00833A90 /* Project object */;
+}
