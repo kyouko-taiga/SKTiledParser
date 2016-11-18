@@ -119,7 +119,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                     self.orientation = .hexagonalFlat
                 } else {
                     print(
-                        "SKTiledParser: (warning) unsupported orientation '\(elementName)', " +
+                        "SKTiledParser: (warning) unsupported orientation '\(orientation)', " +
                         "defined at [\(parser.lineNumber)]; will use .grid instead")
                     self.orientation = .grid
                 }
@@ -283,18 +283,18 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
                 self.tileGroups[tileAttributes.id!] = (tileGroup, self.currentTileSet!)
             }
-            
+
         case "layer":
             // Register the parsed tilemap.
             self.tileMaps.append(self.currentTileMap!)
-            
+
             // Reset the state of the parser.
             self.currentTileMap = nil
             self.currentPosition = (0, self.height - 1)
-            
+
         default:
             break
         }
     }
-    
+
 }
