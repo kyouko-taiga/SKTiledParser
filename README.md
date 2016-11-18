@@ -15,11 +15,13 @@ As a result, I decided to rework Tom Linthwaite's [SKTilemap](https://github.com
 ## Usage
 Simply drag and drop `SKTiledParser.swift` to your project to import the code.
 
-Then, create an instance of SKTiledParser, and load your `.tmx` file with `loadTileMaps(fromFileNamed:)`:
+Then, create an instance of SKTiledParser, and load your `.tmx` file with `loadLayout(fromFileNamed:)`.
+Each layer from your file will be transformed into an `SKTileMapNode`,
+and made children of a single "layout" node the method will return.
 
 ```swift
 let parser = SKTiledParser()
-let nodes = parser.loadTileMaps(fromFileNamed: "tilemap")
+let layout = parser.loadLayout(fromFileNamed: "tilemap")
 ```
 
 It will not only create the tilemap nodes, but also the `SKTileSet` from which the tiles will be displayed.
@@ -28,5 +30,8 @@ Individual tiles from that atlas are expected to have the same name as the files
 
 Let's say I have a tileset named `Terrain` in Tiled, with two tiles: `grass` and `rock`.
 Then, I should create a sprite atlas called `Terrain` with two tile groups named respectively `grass` and `rock`.
+
+The most convenient setup is to first generate your sprite atlases,
+and then create your tilesets in Tiled using references to the files in your asset catalog.
 
 The Xcode project is a usage example.

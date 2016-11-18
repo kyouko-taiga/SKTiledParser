@@ -1,48 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" renderorder="right-down" width="3" height="3" tilewidth="110" tileheight="64" nextobjectid="1">
+<map version="1.0" orientation="isometric" renderorder="right-down" width="6" height="6" tilewidth="110" tileheight="64" nextobjectid="1">
  <tileset firstgid="1" name="Voxel" tilewidth="111" tileheight="128" tilecount="10" columns="0">
-  <tile id="0">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_01.png"/>
+  <tile id="12">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_01.imageset/voxelTile_01.png"/>
   </tile>
-  <tile id="1">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_02.png"/>
+  <tile id="13">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_02.imageset/voxelTile_02.png"/>
   </tile>
-  <tile id="2">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_03.png"/>
+  <tile id="14">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_03.imageset/voxelTile_03.png"/>
   </tile>
-  <tile id="3">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_04.png"/>
+  <tile id="15">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_04.imageset/voxelTile_04.png"/>
   </tile>
-  <tile id="4">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_05.png"/>
+  <tile id="16">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_05.imageset/voxelTile_05.png"/>
   </tile>
-  <tile id="5">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_06.png"/>
+  <tile id="17">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_06.imageset/voxelTile_06.png"/>
   </tile>
-  <tile id="6">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_07.png"/>
+  <tile id="18">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_07.imageset/voxelTile_07.png"/>
   </tile>
-  <tile id="7">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_08.png"/>
+  <tile id="19">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_08.imageset/voxelTile_08.png"/>
   </tile>
-  <tile id="8">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_09.png"/>
+  <tile id="20">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_09.imageset/voxelTile_09.png"/>
   </tile>
-  <tile id="9">
-   <image width="111" height="128" source="isometric-blocks/PNG/Voxel tiles/voxelTile_10.png"/>
+  <tile id="21">
+   <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_10.imageset/voxelTile_10.png"/>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="3" height="3">
+ <layer name="Ground" width="6" height="6">
   <data>
-   <tile gid="1"/>
-   <tile gid="10"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="10"/>
-   <tile gid="2"/>
-   <tile gid="1"/>
-   <tile gid="10"/>
-   <tile gid="2"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+  </data>
+ </layer>
+ <layer name="Ground+1" width="6" height="6" offsetx="0" offsety="-64">
+  <data>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="22"/>
+   <tile gid="22"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
   </data>
  </layer>
 </map>

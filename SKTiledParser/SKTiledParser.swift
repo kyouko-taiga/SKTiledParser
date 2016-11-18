@@ -18,6 +18,14 @@ struct TileAttributes {
 }
 
 
+// MARK: LayerAttributes
+struct LayerAttributes {
+    var name: String?
+    var offsetX: Int?
+    var offsetY: Int?
+}
+
+
 // MARK: SKTiledParser
 
 class SKTiledParser : NSObject, XMLParserDelegate {
@@ -43,6 +51,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
     private var currentStartingId: Int?
     private var currentTileAttributes: TileAttributes?
 
+    private var currentLayerAttributes: LayerAttributes?
     private var currentTileMap: SKTileMapNode?
     private var currentPosition: (x: Int, y: Int) = (0, 0)
 
@@ -52,12 +61,12 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         self.atlasPrefix = atlasPrefix
     }
 
-    /** Creates an SKtileMapNode for each layer defined in a .tmx tilemap file. */
-    func loadTileMaps(fromFileNamed filename: String) -> [SKTileMapNode] {
+    /// Creates an SKNode with a SKtileMapNode child for each layer defined in a .tmx tilemap file.
+    func loadLayout(fromFileNamed filename: String) -> SKNode? {
 
         guard let url = Bundle.main.url(forResource: filename, withExtension: ".tmx") else {
             print("SKTiledParser: (error) tilemap '\(filename)' couldn't be found")
-            return []
+            return nil
         }
 
         let data: Data?
@@ -65,7 +74,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             data = try Data(contentsOf: url)
         } catch let error {
             print("SKTiledParser: \(error.localizedDescription)")
-            return []
+            return nil
         }
 
         let parser = XMLParser(data: data!)
@@ -73,11 +82,17 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         self.errorMessage = "couldn't parse \(filename)"
 
         if parser.parse() {
-            return self.tileMaps
+            let rv = SKNode()
+
+            for tileMap in self.tileMaps {
+                rv.addChild(tileMap)
+            }
+
+            return rv
         }
 
         print("SKTiledParser: (error) " + self.errorMessage)
-        return []
+        return nil
     }
 
     // MARK: NSXMLParser Delegate Functions
@@ -156,6 +171,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                 self.currentTileAttributes = TileAttributes()
                 self.currentTileAttributes!.id = currentStartingId! + Int(id)!
             } else {
+                // Otherwise, we're parsing the a layer definition.
                 defer {
                     // Compute the position of the next tile to place.
                     if self.currentPosition.x == self.width - 1 {
@@ -166,12 +182,16 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                     }
                 }
 
-                // Otherwise, we're parsing the a layer definition.
                 guard let id = attributeDict["gid"] else {
                     print(
                         "SKTiledParser: (warning) missing property 'gid' on tile element at " +
                             "[\(parser.lineNumber)]; tile at position (\(self.currentPosition.x), " +
                         "\(self.currentPosition.y)) won't be placed")
+                    return
+                }
+
+                // If the parsed gid is 0, there's no tile to place.
+                if id == "0" {
                     return
                 }
 
@@ -190,6 +210,17 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                         columns: self.width,
                         rows: self.height,
                         tileSize: self.tileSize)
+
+                    // Set the name of the tilemap node if we could parse it.
+                    self.currentTileMap!.name = self.currentLayerAttributes?.name
+
+                    // Apply the layer offset (if we could parse it) on the tilemap position.
+                    if let offsetX = self.currentLayerAttributes?.offsetX {
+                        self.currentTileMap!.position.x = CGFloat(offsetX)
+                    }
+                    if let offsetY = self.currentLayerAttributes?.offsetY {
+                        self.currentTileMap!.position.y = CGFloat(-offsetY)
+                    }
                 }
 
                 // Make sure the tileset of the current tilemap matches that of the given tile
@@ -232,6 +263,21 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             } else {
                 // TODO: Handle custom properties on maps, layers, objectgroups and objects.
                 print("SKTiledParser: (warning) ignored custom property at [\(parser.lineNumber)]")
+            }
+
+        case "layer":
+            self.currentLayerAttributes = LayerAttributes()
+
+            if let name = attributeDict["name"] {
+                self.currentLayerAttributes!.name = name
+            }
+
+            if let offsetX = attributeDict["offsetx"] {
+                self.currentLayerAttributes!.offsetX = Int(offsetX)
+            }
+
+            if let offsetX = attributeDict["offsety"] {
+                self.currentLayerAttributes!.offsetY = Int(offsetX)
             }
 
         // TODO: Handle tile offsets, animations and objects
@@ -289,6 +335,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             self.tileMaps.append(self.currentTileMap!)
 
             // Reset the state of the parser.
+            self.currentLayerAttributes = nil
             self.currentTileMap = nil
             self.currentPosition = (0, self.height - 1)
 

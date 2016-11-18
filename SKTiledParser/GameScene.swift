@@ -13,10 +13,11 @@ class GameScene: SKScene {
 
     override func didMove(to view: SKView) {
         let parser = SKTiledParser(atlasPrefix: "Tiles/")
-        for tileMap in parser.loadTileMaps(fromFileNamed: "tilemap") {
-            tileMap.position.x = view.frame.width / 2
-            tileMap.position.y = view.frame.height / 2
-            self.addChild(tileMap)
+
+        if let layout = parser.loadLayout(fromFileNamed: "tilemap") {
+            layout.position.x = view.frame.width / 2
+            layout.position.y = view.frame.height / 2
+            self.addChild(layout)
         }
     }
 
