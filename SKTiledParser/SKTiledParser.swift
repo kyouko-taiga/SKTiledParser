@@ -7,11 +7,86 @@
 //
 
 import SpriteKit
+import GameKit
+
+
+// MARK: SKTiledLayout
+
+class SKTiledLayout {
+
+    // MARK: Properties
+
+    let rootNode: SKNode
+
+    let width: Int
+    let height: Int
+
+    let layers: [SKTileMapNode]
+    let tileSets: [SKTileSet]
+    let orientation: SKTileSetType
+
+    // MARK: Functions
+
+    init(
+        width: Int, height: Int, layers: [SKTileMapNode], tileSets: [SKTileSet],
+        orientation: SKTileSetType) {
+
+        self.width = width
+        self.height = height
+
+        self.layers = layers
+        self.tileSets = tileSets
+        self.orientation = orientation
+
+        self.rootNode = SKNode()
+
+        for layer in layers {
+            rootNode.addChild(layer)
+        }
+    }
+
+    func computePathfindingGraph<NodeClass>(
+        usingLayers layers: [SKTileMapNode]) -> GKGridGraph<NodeClass> {
+
+        let graph = GKGridGraph(
+            fromGridStartingAt: vector_int2(0, 0),
+            width: Int32(self.width),
+            height: Int32(self.height),
+            diagonalsAllowed: false,
+            nodeClass: NodeClass.self)
+
+        var obstacles = [GKGraphNode]()
+
+        for layer in layers {
+            for col in 0 ..< self.width {
+                for row in 0 ..< self.height {
+                    // Remove node at <col, row> from the graph if a tile was placed at the same
+                    // coordinates.
+                    if layer.tileDefinition(atColumn: col, row: row) != nil {
+                        obstacles.append(
+                            graph.node(atGridPosition: vector_int2(Int32(col), Int32(row)))!)
+                    }
+                }
+            }
+        }
+
+        graph.remove(obstacles)
+        return graph as! GKGridGraph<NodeClass>
+    }
+
+    func computePathfindingGraph<NodeClass>(
+        usingLayersNamed names: [String]) -> GKGridGraph<NodeClass> {
+
+        return self.computePathfindingGraph(
+            usingLayers: self.layers.filter { ($0.name != nil) && (names.contains($0.name!)) })
+    }
+
+}
 
 
 // MARK: TileAttributes
 
-struct TileAttributes {
+fileprivate struct TileAttributes {
     var id: Int?
     var texture: SKTexture?
     var userData = [String: Any]()
@@ -19,7 +94,8 @@ struct TileAttributes {
 
 
 // MARK: LayerAttributes
-struct LayerAttributes {
+
+fileprivate struct LayerAttributes {
     var name: String?
     var offsetX: Int?
     var offsetY: Int?
@@ -36,7 +112,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
     private var errorMessage = ""
 
-    private var width  = 0
+    private var width = 0
     private var height = 0
     private var tileSize = CGSize.zero
     private var orientation: SKTileSetType = .isometric
@@ -61,8 +137,8 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         self.atlasPrefix = atlasPrefix
     }
 
-    /// Creates an SKNode with a SKtileMapNode child for each layer defined in a .tmx tilemap file.
-    func loadLayout(fromFileNamed filename: String) -> SKNode? {
+    /// Creates an SKTiledLayout from a .tmx tilemap file.
+    func loadLayout(fromFileNamed filename: String) -> SKTiledLayout? {
 
         guard let url = Bundle.main.url(forResource: filename, withExtension: ".tmx") else {
             print("SKTiledParser: (error) tilemap '\(filename)' couldn't be found")
@@ -82,13 +158,12 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         self.errorMessage = "couldn't parse \(filename)"
 
         if parser.parse() {
-            let rv = SKNode()
-
-            for tileMap in self.tileMaps {
-                rv.addChild(tileMap)
-            }
-
-            return rv
+            return SKTiledLayout(
+                width: self.width,
+                height: self.height,
+                layers: self.tileMaps,
+                tileSets: self.tileSets,
+                orientation: self.orientation)
         }
 
         print("SKTiledParser: (error) " + self.errorMessage)
@@ -259,7 +334,17 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             }
 
             if var tileAttributes = self.currentTileAttributes {
-                tileAttributes.userData[name] = value
+                let propertyType = attributeDict["type"] ?? "string"
+                switch propertyType {
+                case "int":
+                    tileAttributes.userData[name] = Int(value)
+                case "float":
+                    tileAttributes.userData[name] = Float(value)
+                case "bool":
+                    tileAttributes.userData[name] = (value == "true")
+                default:
+                    tileAttributes.userData[name] = value
+                }
             } else {
                 // TODO: Handle custom properties on maps, layers, objectgroups and objects.
                 print("SKTiledParser: (warning) ignored custom property at [\(parser.lineNumber)]")

@@ -14,11 +14,13 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         let parser = SKTiledParser(atlasPrefix: "Tiles/")
 
-        if let layout = parser.loadLayout(fromFileNamed: "tilemap") {
-            layout.position.x = view.frame.width / 2
-            layout.position.y = view.frame.height / 2
-            self.addChild(layout)
+        guard let layout = parser.loadLayout(fromFileNamed: "tilemap") else {
+            return
         }
+
+        layout.rootNode.position.x = view.frame.width / 2
+        layout.rootNode.position.y = view.frame.height / 2
+        self.addChild(layout.rootNode)
     }
 
 }

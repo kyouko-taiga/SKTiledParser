@@ -17,11 +17,13 @@ Simply drag and drop `SKTiledParser.swift` to your project to import the code.
 
 Then, create an instance of SKTiledParser, and load your `.tmx` file with `loadLayout(fromFileNamed:)`.
 Each layer from your file will be transformed into an `SKTileMapNode`,
-and made children of a single "layout" node the method will return.
+and made children of a single "layout" the method will return.
+You can then access the root node of this layout to insert the tilemaps in your scene.
 
 ```swift
 let parser = SKTiledParser()
 let layout = parser.loadLayout(fromFileNamed: "tilemap")
+scene.addChild(layout!.rootNode)
 ```
 
 It will not only create the tilemap nodes, but also the `SKTileSet` from which the tiles will be displayed.

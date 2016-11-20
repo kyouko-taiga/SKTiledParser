@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" renderorder="right-down" width="6" height="6" tilewidth="110" tileheight="64" nextobjectid="1">
+<map version="1.0" orientation="isometric" renderorder="right-down" width="6" height="6" tilewidth="110" tileheight="64" nextobjectid="12">
  <tileset firstgid="1" name="Voxel" tilewidth="111" tileheight="128" tilecount="10" columns="0">
   <tile id="12">
+   <properties>
+    <property name="tileCategory" value="sand"/>
+   </properties>
    <image width="111" height="128" source="Assets.xcassets/Tiles/Voxel.spriteatlas/voxelTile_01.imageset/voxelTile_01.png"/>
   </tile>
   <tile id="13">
@@ -54,15 +57,15 @@
    <tile gid="21"/>
    <tile gid="22"/>
    <tile gid="22"/>
+   <tile gid="13"/>
+   <tile gid="13"/>
+   <tile gid="13"/>
    <tile gid="22"/>
    <tile gid="22"/>
    <tile gid="22"/>
    <tile gid="22"/>
-   <tile gid="22"/>
-   <tile gid="22"/>
-   <tile gid="22"/>
-   <tile gid="22"/>
-   <tile gid="22"/>
+   <tile gid="13"/>
+   <tile gid="13"/>
    <tile gid="22"/>
    <tile gid="21"/>
    <tile gid="21"/>
@@ -106,6 +109,46 @@
    <tile gid="0"/>
    <tile gid="22"/>
    <tile gid="22"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+  </data>
+ </layer>
+ <layer name="Ground+2" width="6" height="6" offsetx="0" offsety="-64">
+  <data>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="18"/>
+   <tile gid="18"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
