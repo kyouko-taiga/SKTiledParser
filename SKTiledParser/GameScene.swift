@@ -12,7 +12,7 @@ import SpriteKit
 class GameScene: SKScene {
 
     override func didMove(to view: SKView) {
-        let parser = SKTiledParser(atlasPrefix: "Tiles/")
+        let parser = SKTiledParser(texturesNamespace: "Tiles/")
 
         guard let layout = parser.loadLayout(fromFileNamed: "tilemap") else {
             return

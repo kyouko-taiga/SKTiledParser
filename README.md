@@ -27,13 +27,21 @@ scene.addChild(layout!.rootNode)
 ```
 
 It will not only create the tilemap nodes, but also the `SKTileSet` from which the tiles will be displayed.
-The texture of the tilesets are read from tile atlases that should be named after the name of your tileset within the `.tmx` file.
-Individual tiles from that atlas are expected to have the same name as the files used in Tiled.
 
-Let's say I have a tileset named `Terrain` in Tiled, with two tiles: `grass` and `rock`.
-Then, I should create a sprite atlas called `Terrain` with two tile groups named respectively `grass` and `rock`.
+The Xcode project shows a working example.
+
+### Locating textures
+The textures of the tilesets are read from your assets.
+Note that for that mechanism to work, tile images referenced within your `.tmx` file are expected to be named after your assets name.
+Only the base name of the file (without extension) matters.
+
+For instance, let's say I defined two image sets in my asset catalog, named `grass` and `rock`.
+Then Tiled should reference them by files respectively named `path/to/somewhere/grass.png` and `path/to/somewhere/rock.png` (the extension doesn't matter, it could very well be `.jpg` instead)
+
+Since the texture lookup is done by `SKTexture.init(imageNamed:)`, you can seamlessly use sprite atlases.
 
 The most convenient setup is to first generate your sprite atlases,
 and then create your tilesets in Tiled using references to the files in your asset catalog.
 
-The Xcode project is a usage example.
+Finally, if like me you like to keep your things tidy in you asset catalog, you can use namespaces.
+Initialize `SKTiledParser` with `init(texturesNamespace:)` to specify the namespace that should be prepended when searching for textures.

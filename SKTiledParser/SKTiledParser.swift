@@ -108,7 +108,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
     // MARK: Properties
 
-    public let atlasPrefix: String
+    public let texturesNamespace: String
 
     private var errorMessage = ""
 
@@ -122,7 +122,6 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
     private var tileGroups = [Int: (SKTileGroup, SKTileSet)]()
 
-    private var currentAtlas: SKTextureAtlas?
     private var currentTileSet: SKTileSet?
     private var currentStartingId: Int?
     private var currentTileAttributes: TileAttributes?
@@ -133,8 +132,8 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
     // MARK: Functions
 
-    init(atlasPrefix: String = "") {
-        self.atlasPrefix = atlasPrefix
+    init(texturesNamespace: String = "") {
+        self.texturesNamespace = texturesNamespace
     }
 
     /// Creates an SKTiledLayout from a .tmx tilemap file.
@@ -226,7 +225,6 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             }
 
             // Update the state of the parser so that we can parse all tile definitions.
-            self.currentAtlas = SKTextureAtlas(named: "\(self.atlasPrefix)\(tileSetName)")
             self.currentTileSet = SKTileSet()
             self.currentTileSet?.type = self.orientation
             self.currentStartingId = Int(firstgid)
@@ -321,7 +319,8 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                         return
             }
 
-            self.currentTileAttributes?.texture = self.currentAtlas?.textureNamed(textureName)
+            self.currentTileAttributes?.texture = SKTexture(
+                imageNamed: self.texturesNamespace + textureName)
 
         case "property":
             guard
@@ -385,7 +384,6 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             self.tileSets.append(self.currentTileSet!)
 
             // Reset the state of the parser.
-            self.currentAtlas = nil
             self.currentTileSet = nil
             self.currentStartingId = nil
 
