@@ -25,6 +25,8 @@ class SKTiledLayout {
     let tileSets: [SKTileSet]
     let orientation: SKTileSetType
 
+    var objectGroups = [SKNode]()
+
     // MARK: Functions
 
     init(
@@ -118,9 +120,11 @@ class SKTiledParser : NSObject, XMLParserDelegate {
     private var orientation: SKTileSetType = .isometric
 
     private var tileMaps = [SKTileMapNode]()
-    private var tileSets = [SKTileSet]()
+    private var objectGroups = [SKNode]()
 
+    private var tileSets = [SKTileSet]()
     private var tileGroups = [Int: (SKTileGroup, SKTileSet)]()
+    private var textures = [Int: SKTexture]()
 
     private var currentTileSet: SKTileSet?
     private var currentStartingId: Int?
@@ -129,6 +133,8 @@ class SKTiledParser : NSObject, XMLParserDelegate {
     private var currentLayerAttributes: LayerAttributes?
     private var currentTileMap: SKTileMapNode?
     private var currentPosition: (x: Int, y: Int) = (0, 0)
+
+    private var currentObjectGroup: SKNode?
 
     // MARK: Functions
 
@@ -157,12 +163,18 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         self.errorMessage = "couldn't parse \(filename)"
 
         if parser.parse() {
-            return SKTiledLayout(
+            let layout = SKTiledLayout(
                 width: self.width,
                 height: self.height,
                 layers: self.tileMaps,
                 tileSets: self.tileSets,
                 orientation: self.orientation)
+
+            for objectGroup in self.objectGroups {
+                layout.rootNode.addChild(objectGroup)
+            }
+
+            return layout
         }
 
         print("SKTiledParser: (error) " + self.errorMessage)
@@ -255,7 +267,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                     }
                 }
 
-                guard let id = attributeDict["gid"] else {
+                guard let gid = attributeDict["gid"] else {
                     print(
                         "SKTiledParser: (warning) missing property 'gid' on tile element at " +
                             "[\(parser.lineNumber)]; tile at position (\(self.currentPosition.x), " +
@@ -264,11 +276,11 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                 }
 
                 // If the parsed gid is 0, there's no tile to place.
-                if id == "0" {
+                if gid == "0" {
                     return
                 }
 
-                guard let (tileGroup, tileSet) = self.tileGroups[Int(id)!] else {
+                guard let (tileGroup, tileSet) = self.tileGroups[Int(gid)!] else {
                     print(
                         "SKTiledParser: (warning) unassigned tile gid at " +
                             "[\(parser.lineNumber)]; tile at position (\(self.currentPosition.x), " +
@@ -292,7 +304,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                         self.currentTileMap!.position.x = CGFloat(offsetX)
                     }
                     if let offsetY = self.currentLayerAttributes?.offsetY {
-                        self.currentTileMap!.position.y = CGFloat(-offsetY)
+                        self.currentTileMap!.position.y = CGFloat(offsetY)
                     }
                 }
 
@@ -357,15 +369,69 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             }
 
             if let offsetX = attributeDict["offsetx"] {
-                self.currentLayerAttributes!.offsetX = Int(offsetX)
+                self.currentLayerAttributes!.offsetX = Int(offsetX)!
             }
 
-            if let offsetX = attributeDict["offsety"] {
-                self.currentLayerAttributes!.offsetY = Int(offsetX)
+            if let offsetY = attributeDict["offsety"] {
+                self.currentLayerAttributes!.offsetY = -(Int(offsetY)!)
+            }
+
+        case "objectgroup":
+            self.currentObjectGroup = SKNode()
+            self.currentObjectGroup!.name = attributeDict["name"]
+
+            if let offsetX = attributeDict["offsetx"] {
+                self.currentObjectGroup!.position.x = CGFloat(Int(offsetX)!)
+            }
+
+            if let offsetY = attributeDict["offsety"] {
+                self.currentObjectGroup!.position.y = -CGFloat(Int(offsetY)!)
+            }
+
+        case "object":
+            var object: SKNode? = nil
+
+            // If the object has a property "gid", we'll fetch the corresponding texture to create
+            // an SKSpriteNode. Otherwise we'll create a generic SKNode.
+            if let gid = attributeDict["gid"] {
+                if let width = attributeDict["width"], let height = attributeDict["height"] {
+                    object = SKSpriteNode(
+                        texture: self.textures[Int(gid)!],
+                        size: CGSize(width: Int(width)!, height: Int(height)!))
+                } else {
+                    object = SKSpriteNode(texture: self.textures[Int(gid)!])
+                }
+
+                let sprite = object as! SKSpriteNode
+                sprite.anchorPoint.y = (self.tileSize.height / 2) / sprite.size.height
+            } else {
+                object = SKNode()
+            }
+
+            // Parse the object position.
+            if let x = attributeDict["x"], let y = attributeDict["y"] {
+                var coord = CGPoint(
+                    x: CGFloat(Int(x)!) / self.tileSize.height,
+                    y: CGFloat(Int(y)!) / self.tileSize.height)
+                print(coord)
+                coord.x = 0
+                coord.y = 5
+
+                let offset = -CGFloat(self.width) * self.tileSize.width / 2
+
+                object!.position = CGPoint(
+                    x: (coord.x - coord.y) * (self.tileSize.width / 2) + offset,
+                    y: (coord.x + coord.y) * (self.tileSize.height / 2))
+
+                self.currentObjectGroup?.addChild(object!)
+            } else {
+                print(
+                    "SKTiledParser: (warning) object at [\(parser.lineNumber)] was ignored " +
+                    "because its position could not be parsed")
             }
 
         // TODO: Handle tile offsets, animations and objects
-        case "tileoffset", "animation", "frame", "objectgroup", "object":
+        case "tileoffset", "animation", "frame", "object":
             print(
                 "SKTiledParser: (warning) ignored element '\(elementName)' [\(parser.lineNumber)]")
 
@@ -411,6 +477,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                 self.currentTileSet!.tileGroups.append(tileGroup)
 
                 self.tileGroups[tileAttributes.id!] = (tileGroup, self.currentTileSet!)
+                self.textures[tileAttributes.id!] = texture
             }
 
         case "layer":
@@ -421,6 +488,13 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             self.currentLayerAttributes = nil
             self.currentTileMap = nil
             self.currentPosition = (0, self.height - 1)
+
+        case "objectgroup":
+            // Register the parsed object group.
+            self.objectGroups.append(self.currentObjectGroup!)
+
+            // Reset the state of the parser.
+            self.currentObjectGroup = nil
 
         default:
             break
