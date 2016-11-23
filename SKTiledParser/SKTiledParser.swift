@@ -16,35 +16,66 @@ class SKTiledLayout {
 
     // MARK: Properties
 
-    let rootNode: SKNode
-
-    let width: Int
-    let height: Int
-
-    let layers: [SKTileMapNode]
-    let tileSets: [SKTileSet]
+    let baseLayer: SKTileMapNode
+    let tilesLayers: [SKTileMapNode]
     let orientation: SKTileSetType
 
-    var objectGroups = [SKNode]()
+    lazy var numberOfColumns: Int = {
+        return self.baseLayer.numberOfColumns
+    }()
+
+    lazy var numberOfRows: Int = {
+        return self.baseLayer.numberOfRows
+    }()
 
     // MARK: Functions
 
     init(
-        width: Int, height: Int, layers: [SKTileMapNode], tileSets: [SKTileSet],
+        baseLayer: SKTileMapNode, tilesLayers: [SKTileMapNode],
         orientation: SKTileSetType) {
 
-        self.width = width
-        self.height = height
-
-        self.layers = layers
-        self.tileSets = tileSets
+        self.baseLayer = baseLayer
+        self.tilesLayers = tilesLayers
         self.orientation = orientation
 
-        self.rootNode = SKNode()
-
-        for layer in layers {
-            rootNode.addChild(layer)
+        for tilesLayer in tilesLayers {
+            baseLayer.addChild(tilesLayer)
         }
+    }
+
+    convenience init?(tilesLayers: [SKTileMapNode]) {
+        // Fail to initialize if there isn't at least 1 layer.
+        guard tilesLayers.count >= 1 else {
+            return nil
+        }
+
+        // Determine the dimension and orientation of the the base layer.
+        var columns = 0
+        var rows = 0
+        var orientation: SKTileSetType?
+        var tileSize: CGSize?
+
+        for layer in tilesLayers {
+            columns = max(columns, layer.numberOfColumns)
+            rows = max(rows, layer.numberOfColumns)
+
+            if orientation == nil {
+                orientation = layer.tileSet.type
+            }
+
+            if tileSize == nil {
+                tileSize = layer.tileSize
+            }
+        }
+
+        self.init(
+            baseLayer: SKTileMapNode(
+                tileSet: SKTileSet(tileGroups: [], tileSetType: orientation!),
+                columns: columns,
+                rows: rows,
+                tileSize: tileSize!),
+            tilesLayers: tilesLayers,
+            orientation: orientation!)
     }
 
     func computePathfindingGraph<NodeClass>(
@@ -52,16 +83,16 @@ class SKTiledLayout {
 
         let graph = GKGridGraph(
             fromGridStartingAt: vector_int2(0, 0),
-            width: Int32(self.width),
-            height: Int32(self.height),
+            width: Int32(self.numberOfColumns),
+            height: Int32(self.numberOfRows),
             diagonalsAllowed: false,
             nodeClass: NodeClass.self)
 
         var obstacles = [GKGraphNode]()
 
         for layer in layers {
-            for col in 0 ..< self.width {
-                for row in 0 ..< self.height {
+            for col in 0 ..< self.numberOfColumns {
+                for row in 0 ..< self.numberOfRows {
                     // Remove node at <col, row> from the graph if a tile was placed at the same
                     // coordinates.
                     if layer.tileDefinition(atColumn: col, row: row) != nil {
@@ -79,28 +110,13 @@ class SKTiledLayout {
     func computePathfindingGraph<NodeClass>(
         usingLayersNamed names: [String]) -> GKGridGraph<NodeClass> {
 
-        return self.computePathfindingGraph(
-            usingLayers: self.layers.filter { ($0.name != nil) && (names.contains($0.name!)) })
+        let collisionLayers = self.tilesLayers.filter {
+            ($0.name != nil) && (names.contains($0.name!))
+        }
+
+        return self.computePathfindingGraph(usingLayers: collisionLayers)
     }
 
-}
-
-
-// MARK: TileAttributes
-
-fileprivate struct TileAttributes {
-    var id: Int?
-    var texture: SKTexture?
-    var userData = [String: Any]()
-}
-
-
-// MARK: LayerAttributes
-
-fileprivate struct LayerAttributes {
-    var name: String?
-    var offsetX: Int?
-    var offsetY: Int?
 }
 
 
@@ -114,11 +130,12 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
     private var errorMessage = ""
 
-    private var width = 0
-    private var height = 0
+    private var columns = 0
+    private var rows = 0
     private var tileSize = CGSize.zero
     private var orientation: SKTileSetType = .isometric
 
+    private var baseTileMap: SKTileMapNode?
     private var tileMaps = [SKTileMapNode]()
     private var objectGroups = [SKNode]()
 
@@ -164,14 +181,12 @@ class SKTiledParser : NSObject, XMLParserDelegate {
 
         if parser.parse() {
             let layout = SKTiledLayout(
-                width: self.width,
-                height: self.height,
-                layers: self.tileMaps,
-                tileSets: self.tileSets,
+                baseLayer: self.baseTileMap!,
+                tilesLayers: self.tileMaps,
                 orientation: self.orientation)
 
             for objectGroup in self.objectGroups {
-                layout.rootNode.addChild(objectGroup)
+                layout.baseLayer.addChild(objectGroup)
             }
 
             return layout
@@ -190,16 +205,16 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         switch elementName {
         case "map":
             guard
-                let width = attributeDict["width"],
-                let height = attributeDict["height"] else {
+                let columns = attributeDict["width"],
+                let rows = attributeDict["height"] else {
                     self.errorMessage = "missing map dimensions [\(parser.lineNumber)]"
                     parser.abortParsing()
                     return
             }
 
-            self.width = Int(width)!
-            self.height = Int(height)!
-            self.currentPosition.y = self.height - 1
+            self.columns = Int(columns)!
+            self.rows = Int(rows)!
+            self.currentPosition.y = self.rows - 1
 
             guard
                 let tileWidth = attributeDict["tilewidth"],
@@ -225,6 +240,12 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                     self.orientation = .grid
                 }
             }
+
+            self.baseTileMap = SKTileMapNode(
+                tileSet: SKTileSet(tileGroups: [], tileSetType: orientation),
+                columns: self.columns,
+                rows: self.rows,
+                tileSize: self.tileSize)
 
         case "tileset":
             guard
@@ -259,7 +280,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                 // Otherwise, we're parsing the a layer definition.
                 defer {
                     // Compute the position of the next tile to place.
-                    if self.currentPosition.x == self.width - 1 {
+                    if self.currentPosition.x == self.columns - 1 {
                         self.currentPosition.x = 0
                         self.currentPosition.y -= 1
                     } else {
@@ -292,8 +313,8 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                 if self.currentTileMap == nil {
                     self.currentTileMap = SKTileMapNode(
                         tileSet: tileSet,
-                        columns: self.width,
-                        rows: self.height,
+                        columns: self.columns,
+                        rows: self.rows,
                         tileSize: self.tileSize)
 
                     // Set the name of the tilemap node if we could parse it.
@@ -408,20 +429,28 @@ class SKTiledParser : NSObject, XMLParserDelegate {
                 object = SKNode()
             }
 
+            object!.name = attributeDict["name"]
+
             // Parse the object position.
             if let x = attributeDict["x"], let y = attributeDict["y"] {
-                var coord = CGPoint(
-                    x: CGFloat(Int(x)!) / self.tileSize.height,
-                    y: CGFloat(Int(y)!) / self.tileSize.height)
-                print(coord)
-                coord.x = 0
-                coord.y = 5
+                if self.orientation == .isometric {
+                    // In isometric tilemaps, Tiled sets object positions according to the
+                    // isometric axis rather than the orthogonal ones. As a result, we should
+                    // recompute all coordinates in SpriteKit's coordinate system.
+                    let col = CGFloat(Int(x)!) / self.tileSize.height - 1
+                    let row = -CGFloat(Int(y)!) / self.tileSize.height + CGFloat(self.rows)
 
-                let offset = -CGFloat(self.width) * self.tileSize.width / 2
+                    if !(0 ..< self.columns ~= Int(col)) || !(0 ..< self.rows ~= Int(row)) {
+                        print(
+                            "SKTiledParser: (warning) object \(attributeDict["id"]!) is outside " +
+                            "of the tilemap, line \(parser.lineNumber)")
+                    }
 
-                object!.position = CGPoint(
-                    x: (coord.x - coord.y) * (self.tileSize.width / 2) + offset,
-                    y: (coord.x + coord.y) * (self.tileSize.height / 2))
+                    object!.position = self.baseTileMap!.centerOfTile(
+                        atColumn: Int(col), row: Int(row))
+                }
+
+                // TODO: Handle object position with other orientations.
 
                 self.currentObjectGroup?.addChild(object!)
             } else {
@@ -487,7 +516,7 @@ class SKTiledParser : NSObject, XMLParserDelegate {
             // Reset the state of the parser.
             self.currentLayerAttributes = nil
             self.currentTileMap = nil
-            self.currentPosition = (0, self.height - 1)
+            self.currentPosition = (0, self.rows - 1)
 
         case "objectgroup":
             // Register the parsed object group.
@@ -501,4 +530,22 @@ class SKTiledParser : NSObject, XMLParserDelegate {
         }
     }
 
+}
+
+
+// MARK: TileAttributes
+
+fileprivate struct TileAttributes {
+    var id: Int?
+    var texture: SKTexture?
+    var userData = [String: Any]()
+}
+
+
+// MARK: LayerAttributes
+
+fileprivate struct LayerAttributes {
+    var name: String?
+    var offsetX: Int?
+    var offsetY: Int?
 }

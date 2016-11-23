@@ -18,9 +18,9 @@ class GameScene: SKScene {
             return
         }
 
-        layout.rootNode.position.x = view.frame.width / 2
-        layout.rootNode.position.y = view.frame.height / 2
-        self.addChild(layout.rootNode)
+        layout.baseLayer.position.x = view.frame.width / 2
+        layout.baseLayer.position.y = view.frame.height / 2
+        self.addChild(layout.baseLayer)
     }
 
 }
